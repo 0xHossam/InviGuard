@@ -1,0 +1,56 @@
+api_keys:
+
+  OTXAPIKey: 'YourAPIKey'
+  AbuseIPDBAPIKey: 'YourAPIKey'
+  ThreatFoxAPIKey: 'YourAPIKey'
+
+thresholds:
+
+  mac_flood_threshold: 1000
+  ddos_threshold: 10000
+  dos_threshold: 5000
+  max_threshold: 1000
+
+  high_traffic_threshold: 100000  # bytes, new threshold for high traffic detection
+  high_packet_count_threshold: 200  # count, new threshold for high packet count detection
+  short_duration_threshold: 10  # seconds, new threshold for detecting high traffic in a short duration
+
+suspicious_activity:
+
+  max_domain_length: 70          # threshold for unusually long domain names
+  min_query_interval: 10         # minimum time interval (in seconds) between queries to consider it suspicious
+  max_queries_short_timeframe: 5 # maximum allowed queries in a short timeframe
+
+dga_detection:                    
+
+  min_entropy: 3.5               # minimum entropy threshold for domain names to be considered as potentially DGA-generated
+  max_subdomain_length: 20       # maximum length of subdomain parts to consider before additional analysis
+
+network_detection:
+
+  trusted_network_prefixes: ["192.168.", "10.0.", "172.16."]  # trusted network prefixes
+  suspicious_threshold: 10                                    # for the number of suspicious packets from a single IP
+  time_window: 60                                             # time window in seconds for detecting suspicious activity
+  ttl_threshold: 5                                            # TTL difference threshold for detecting IP spoofing
+
+mac_flooding:
+
+  alert_threshold: 1.5       # Multiplier for the average MAC count to trigger an alert
+  history_maxlen: 1000       # Maximum length of history to keep track of MAC addresses
+  count_maxlen: 100          # Maximum length of the deque that stores unique MAC counts
+
+mac_spoofing:
+
+  change_threshold: 5        # Threshold for the number of MAC changes to trigger an alert
+  history_maxlen: 100        # Maximum length of history to keep track of MAC-IP associations
+
+ip_null_scan:
+
+  alert_threshold: 2         # Multiplier for the average scan interval to trigger an alert
+  count_maxlen: 100          # Maximum length of the deque that stores null scan counts
+
+rst_fin_flood:
+
+  alert_multiplier: 3        # Multiplier for the standard deviation-based threshold to trigger an alert
+  rate_maxlen: 100           # Maximum length of history to keep track of RST/FIN packet rates
+

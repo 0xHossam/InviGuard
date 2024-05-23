@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InviGuard Dashboard</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- jsPDF -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+
+    <style>
+
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #37474F;
+            --body-bg: #F5F7FA;
+            --card-bg: #FFFFFF;
+            --text-color: #333333;
+            --border-color: #E0E0E0;
+            --accent-color: #FFC107;
+            --font-family: 'Fira Code', monospace; 
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--text-color);
+            font-family: var(--font-family);
+            margin: 0;
+            padding: 0;
+            font-size: 1rem;
+            line-height: 1.6;
+            font-weight: 400; /* Set default body font weight */
+        }
+
+        .dark-mode {
+            --body-bg: #121212;
+            --text-color: #E0E0E0;
+            --card-bg: #1E1E1E;
+            --border-color: #333333;
+        }
+
+        .container-fluid {
+            padding: 40px;
+        }
+
+        h2, h3 {
+            color: var(--primary-color);
+            font-weight: 600; /* Increased font weight for headers */
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--shadow-color);
+        }
+
+        .card-body {
+            padding: 20px;
+        }
+
+        .card-title {
+            margin-bottom: 20px;
+            font-size: 1.25rem;
+            font-weight: 500; /* Updated font weight */
+        }
+        .stats-card {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--shadow-color);
+        }
+
+        .stats-icon {
+            font-size: 36px;
+            margin-right: 20px;
+            color: var(--accent-color);
+        }
+
+        .stats-info {
+            flex-grow: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .alerts-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            padding: 25px;
+            margin-bottom: 30px;
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+            border-collapse: collapse;
+        }
+
+        .table th, .table td {
+            padding: 12px 15px;
+            border-top: none;
+        }
+
+        .table th {
+            border-bottom: 2px solid var(--border-color);
+            font-weight: 500; /* Updated font weight */
+            text-align: left;
+        }
+
+        .table tbody tr:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 400px;
+            position: relative;
+            margin: auto;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-severity {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .card-severity:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-severity .card-body {
+            width: 100%;
+            padding: 20px;
+        }
+
+        .chart-container canvas {
+            border-radius: 12px;
+        }
+
+
+        canvas {
+            width: 100% !important;
+            height: 100% !important;
+        }
+
+        .details-box {
+            display: none;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+            max-height: 0;
+        }
+
+        .details-box.open {
+            display: block;
+            max-height: 500px;
+            padding: 15px;
+        }
+
+        .custom-marker {
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            background-size: contain;
+            border: 2px solid #fff;
+        }
+
+        .marker-icon-red {
+            background-color: red;
+        }
+
+        .marker-icon-orange {
+            background-color: orange;
+        }
+
+        .marker-icon-yellow {
+            background-color: yellow;
+        }
+
+        .marker-icon-green {
+            background-color: green;
+        }
+
+        .marker-icon-blue {
+            background-color: blue;
+        }
+
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-content {
+            background-color: #ffffff;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 60%;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover, .close:focus {
+            color: #333;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        #configForm {
+            margin-bottom: 20px;
+        }
+
+        #configForm label {
+            font-weight: bold;
+            color: var(--text-color);
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        #configForm input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            resize: vertical;
+            transition: border-color 0.3s;
+        }
+
+        #configForm input[type="text"]:focus {
+            border-color: var(--primary-color);
+            outline: none;
+        }
+
+        .btn {
+            display: inline-block;
+            font-weight: 500; /* Updated font weight */
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 8px;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #388E3C;
+            border-color: #388E3C;
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #455A64;
+            border-color: #455A64;
+        }
+
+        .btn-secondary-light {
+            background-color: #556270;
+            border-color: #556270;
+            color: #fff;
+        }
+
+        .btn-secondary-light:hover {
+            background-color: #66737F;
+            border-color: #66737F;
+        }
+
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: #fff;
+        }
+
+
+
+    </style>
+</head>
+
+<body>
+    <script>
+        $('#dark-mode-toggle').on('click', function() {
+            $('body').toggleClass('dark-mode');
+            toggleMapTheme();
+        });
+        
+        function showConfigModal() {
+            $.get('/api/config', function(config) {
+                var formHtml = '';
+                for (var key in config) {
+                    formHtml += `<div class="mb-3">
+                                    <label for="${key}" class="form-label">${key.replace(/_/g, ' ').toUpperCase()}:</label>
+                                    <input type="text" class="form-control" id="${key}" value="${config[key]}">
+                                 </div>`;
+                }
+                $('#configForm').html(formHtml);
+                $('#configModal').css('display', 'block');
+            });
+        }
+        
+        function closeConfigModal() {
+            $('#configModal').css('display', 'none');
+        }
+        
+        function updateConfig() {
+            var newConfig = {};
+            $('#configForm input').each(function() {
+                var key = this.id;
+                newConfig[key] = $(this).val();
+            });
+            $.ajax({
+                url: '/api/config',
+                method: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify(newConfig),
+                success: function(response) {
+                    alert('Configuration updated!');
+                    closeConfigModal();
+                }
+            });
+        }
+    </script>
+    
+    <!-- Configuration Modal -->
+    <div id="configModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeConfigModal()">&times;</span>
+            <h2>Configuration Settings</h2>
+            <form id="configForm">
+                <!-- Configuration form fields will be dynamically generated here -->
+            </form>
+            <button class="btn btn-primary" onclick="updateConfig()">Save Configuration</button>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2>InviGuard Dashboard - 0xHossam</h2>
+            <div>
+                <button class="btn btn-secondary-light" id="dark-mode-toggle">Toggle Dark Mode</button>
+                <button class="btn btn-primary" onclick="showConfigModal()">Edit Configurations</button>
+                <button class="btn btn-outline-primary dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    Export Alerts
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+                    <li><a class="dropdown-item" href="#" onclick="exportTable('csv')">CSV</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="exportTable('json')">JSON</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="exportTable('html')">HTML</a></li>
+                    <li><a class="dropdown-item" href="#" onclick="exportTable('pdf')">PDF</a></li>
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Alerts</h3>
+                        <div class="alerts-box">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Attack Type</th>
+                                            <th>IP Address</th>
+                                            <th>Details</th>
+                                            <th>Description</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="alert_table">
+                                        <!-- Alerts will go here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stats-info">
+                        <i class="fas fa-network-wired stats-icon"></i>
+                        <div>
+                            <span>Total Unique IPs</span>
+                            <h3 id="total_ips">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stats-info">
+                        <i class="fas fa-bell stats-icon"></i>
+                        <div>
+                            <span>Total Alerts</span>
+                            <h3 id="total_alerts">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="stats-card">
+                    <div class="stats-info">
+                        <i class="fas fa-exclamation-circle stats-icon"></i>
+                        <div>
+                            <span>Total Alert Types</span>
+                            <h3 id="total_alert_types">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Attack Map</h3>
+                        <div id="map" class="chart-container"></div>
+                    </div>
+                </div>
+                                
+                
+            </div>
+            <div class="col-lg-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">Alert Types Distribution</h3>
+                        <div class="chart-container">
+                            <canvas id="alertTypeChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="card-title">List of All IPs</h3>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>IP Address</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="ip_list">
+                                    <!-- IP list will be dynamically filled here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-severity">
+                    <div class="card-body">
+                        <h3 class="card-title">Alert Severity Levels</h3>
+                        <div class="chart-container">
+                            <canvas id="alertSeverityChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let darkMode = false;
+        const uniqueIPs = new Set();
+    
+        const alertSeverityMapping = {
+            'ARP Spoofing Detected': 'Medium',
+            'Unusual ARP Response Frequency': 'Low',
+            'Multiple MACs Detected': 'Low',
+            'Potential ARP Cache Poisoning': 'Medium',
+            'DHCP Spoofing': 'Medium',
+            'Suspicious Activity': 'Low',
+            'DNS Spoofing': 'Medium',
+            'DNS Tunneling': 'Medium',
+            'DDoS Attack': 'Critical',
+            'DoS Attack': 'Critical',
+            'MITM Detected': 'Critical',
+            'Port Scanning Detected': 'Medium',
+            'Malicious Destination IP Detected': 'High',
+            'Malicious Source IP Detected': 'High',
+            'Frequent DNS Queries': 'Low',
+            'High Traffic Anomaly': 'High',
+            'High Entropy DGA Domain Detected': 'High',
+            'HTTP Flood Detected': 'High',
+            'ICMP Tunneling Detected': 'High',
+            'Frequent ICMP Packets': 'Low',
+            'Unusual SMB Authentication Frequency': 'Medium',
+            'Multiple SMB Authentication Attempts': 'Low',
+            'Multiple SMB Session IDs': 'Low',
+            'Possible TLS MITM Detected': 'Critical',
+            'LLMNR Poisoning Detected': 'Medium',
+            'NBT-NS Poisoning Detected': 'Medium',
+            'IP Spoofing Detected': 'High',
+            'P2P Communication Detected': 'Low',
+            'MAC Flooding Detected': 'Medium',
+            'Frequent MAC Changes Detected': 'Low',
+            'IP Null Scan Detected': 'Medium',
+            'RST/FIN Flood Detected': 'High'
+        };
+
+        const severityLevels = { 'Low': 0, 'Medium': 0, 'High': 0, 'Critical': 0 };
+
+        document.addEventListener("DOMContentLoaded", () => {
+            document.getElementById('dark-mode-toggle').addEventListener('click', toggleDarkMode);
+            initializeMap();
+            fetchAlerts();
+            setInterval(fetchAlerts, 2000);  // Poll the server for new alerts every 2 seconds
+        });
+
+        let map;
+        let markers = [];
+
+        function initializeMap() {
+            map = L.map('map').setView([0, 0], 2);  // Initialize the map
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+            }).addTo(map);
+        }
+
+        function toggleDarkMode() {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            map.eachLayer(function(layer) {
+                map.removeLayer(layer);
+            });
+
+            if (darkMode) {
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                    className: 'dark-mode'
+                }).addTo(map);
+            } else {
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    maxZoom: 18,
+                }).addTo(map);
+            }
+        }
+
+        function updateMap(alerts) {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            const countryCount = {};
+
+            // Fetch geolocation data for each alert and add markers to the map
+            const fetchPromises = alerts.map(alert => {
+                return fetch(`https://ipapi.co/${alert.src_ip}/json/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.country_name) {
+                            let iconClass;
+                            switch (alertSeverityMapping[alert.alert_type]) {
+                                case 'Critical':
+                                    iconClass = 'marker-icon-red';
+                                    break;
+                                case 'High':
+                                    iconClass = 'marker-icon-orange';
+                                    break;
+                                case 'Medium':
+                                    iconClass = 'marker-icon-yellow';
+                                    break;
+                                case 'Low':
+                                    iconClass = 'marker-icon-green';
+                                    break;
+                                default:
+                                    iconClass = 'marker-icon-blue';
+                            }
+
+                            const icon = L.divIcon({
+                                className: `custom-marker ${iconClass}`
+                            });
+
+                            const marker = L.marker([data.latitude, data.longitude], { icon: icon })
+                                .bindPopup(`<b>${alert.alert_type}</b><br>Source IP: ${alert.src_ip}<br>Country: ${data.country_name}`)
+                                .addTo(map);
+                            markers.push(marker);
+
+                            // Count countries
+                            const country = data.country_name;
+                            countryCount[country] = (countryCount[country] || 0) + 1;
+                        }
+                    })
+                    .catch(error => console.error(`Error fetching geolocation data for IP ${alert.src_ip}:`, error));
+            });
+
+            // Wait for all fetch requests to complete
+            Promise.all(fetchPromises).then(() => {
+                console.log('All markers have been added to the map.');
+
+                // Update top countries
+                const topCountries = Object.entries(countryCount).sort((a, b) => b[1] - a[1]).slice(0, 5);
+
+                const countryList = document.getElementById('top_countries');
+                countryList.innerHTML = '';
+
+                topCountries.forEach(([country, count]) => {
+                    countryList.innerHTML += `<li>${country}: ${count}</li>`;
+                });
+            });
+        }
+
+        function fetchIPLocation(ip) {
+            return fetch(`https://ipapi.co/${ip}/json/`)
+                .then(response => response.json())
+                .then(data => {
+                    return { latitude: data.latitude, longitude: data.longitude, country: data.country_name };
+                })
+                .catch(error => {
+                    console.error(`Error fetching geolocation data for IP ${ip}:`, error);
+                    return { latitude: null, longitude: null, country: 'Unknown' };
+                });
+        }
+
+
+        function download(filename, text) {
+            var element = document.createElement('a');
+            element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+            element.setAttribute('download', filename);
+
+            element.style.display = 'none';
+            document.body.appendChild(element);
+
+            element.click();
+
+            document.body.removeChild(element);
+        }
+
+        function exportTable(format) {
+            if (format === 'csv') {
+                exportTableToCSV('alerts.csv');
+            } else if (format === 'json') {
+                exportTableToJSON();
+            } else if (format === 'html') {
+                exportTableToHTML();
+            } else if (format === 'pdf') {
+                exportTableToPDF();
+            }
+        }
+
+        function exportTableToCSV(filename) {
+            var csv = [];
+            var rows = document.querySelectorAll("#alert_table tr");
+
+            for (var i = 0; i < rows.length; i++) {
+                var row = [], cols = rows[i].querySelectorAll("td, th");
+
+                for (var j = 0; j < cols.length; j++) {
+                    row.push(cols[j].innerText);
+                }
+
+                csv.push(row.join(","));
+            }
+
+            download(filename, csv.join("\n"));
+        }
+
+        function exportTableToJSON() {
+            var table = document.getElementById("alert_table");
+            var rows = table.getElementsByTagName("tr");
+            var json = [];
+
+            for (var i = 1; i < rows.length; i++) {
+                var cols = rows[i].getElementsByTagName("td");
+                var data = {};
+
+                data["Type"] = cols[0].innerText;
+                data["Source IP"] = cols[1].innerText;
+                data["Details"] = cols[2].innerText;
+                data["Description"] = cols[3].innerText;
+
+                json.push(data);
+            }
+
+            download("alerts.json", JSON.stringify(json, null, 2));
+        }
+
+        function exportTableToHTML() {
+            var table = document.getElementById("alert_table").outerHTML;
+            download("alerts.html", table);
+        }
+
+        function exportTableToPDF() {
+            var { jsPDF } = window.jspdf;
+            var doc = new jsPDF();
+            var rows = document.querySelectorAll("#alert_table tr");
+
+            rows.forEach((row, rowIndex) => {
+                var cols = row.querySelectorAll("td, th");
+                cols.forEach((col, colIndex) => {
+                    doc.text(col.innerText, 10 + colIndex * 40, 10 + rowIndex * 10);
+                });
+            });
+
+            doc.save('alerts.pdf');
+        }
+
+
+        function fetchAlerts() {
+            fetch('/get_alerts')
+                .then(response => response.json())
+                .then(data => {
+                    const alertTable = document.getElementById('alert_table');
+                    const ipTable = document.getElementById('ip_list');
+                    let totalAlerts = 0;
+                    const alertTypes = {};
+                    const severityLevels = { 'Low': 0, 'Medium': 0, 'High': 0, 'Critical': 0 };
+                    const ipCounts = {};
+                    const ipLocations = [];
+
+                    alertTable.innerHTML = ''; // Clear existing alerts
+                    ipTable.innerHTML = ''; // Clear existing IPs
+
+                    data.forEach(alert => {
+                        const row = `
+                            <tr>
+                                <td>${alert.alert_type}</td>
+                                <td>${alert.src_ip}</td>
+                                <td>${alert.details}</td>
+                                <td>${alert.description}</td>
+                            </tr>
+                        `;
+                        alertTable.insertAdjacentHTML('beforeend', row);
+                        totalAlerts++;
+                        uniqueIPs.add(alert.src_ip);
+                        alertTypes[alert.alert_type] = (alertTypes[alert.alert_type] || 0) + 1;
+
+                        // Update severity levels
+                        const severity = alertSeverityMapping[alert.alert_type];
+                        if (severity) {
+                            severityLevels[severity]++;
+                        }
+
+                        // Update IP counts
+                        ipCounts[alert.src_ip] = (ipCounts[alert.src_ip] || 0) + 1;
+
+                        // Fetch IP location
+                        ipLocations.push(fetchIPLocation(alert.src_ip));
+
+                    });
+
+                    uniqueIPs.forEach(ip => {
+                        const ipRow = `
+                            <tr>
+                                <td>${ip}</td>
+                                <td>
+                                    <button class="btn btn-primary view-details" data-ip="${ip}">View Details</button>
+                                    <div class="details-box" id="details-${ip}"></div>
+                                </td>
+                            </tr>
+                        `;
+                        ipTable.insertAdjacentHTML('beforeend', ipRow);
+                    });
+
+                    document.getElementById('total_alerts').textContent = totalAlerts; // Update total alerts count
+                    document.getElementById('total_ips').textContent = uniqueIPs.size; // Update total unique IPs count
+                    document.getElementById('total_alert_types').textContent = Object.keys(alertTypes).length; // Update total alert types count
+                    updateCharts(alertTypes);
+                    updateSeverityChart(severityLevels); // Update severity chart
+
+                    // Wait for all IP location fetches to complete before updating the map
+                    Promise.all(ipLocations).then(locations => {
+                        const alertsWithLocations = data.map((alert, index) => ({
+                            ...alert,
+                            location: locations[index]
+                        }));
+                        updateMap(alertsWithLocations);  // Update the map with new alerts
+                    });
+
+                    // Update top IPs
+                    updateTopIPs(ipCounts);
+                });
+
+        }
+
+
+        function updateTopIPs(ipCounts) {
+            const topIPsList = document.getElementById('top_ips_list');
+
+            // Sort and get top 5 IPs
+            const sortedIPs = Object.entries(ipCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            topIPsList.innerHTML = sortedIPs.map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('');
+        }
+
+        function updateTopCountriesAndIPs(countryCounts, ipCounts) {
+            const topCountriesList = document.getElementById('top_countries_list');
+            const topIPsList = document.getElementById('top_ips_list');
+
+            // Sort and get top 5 countries
+            const sortedCountries = Object.entries(countryCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            topCountriesList.innerHTML = sortedCountries.map(([country, count]) => `<li>${country}: ${count}</li>`).join('');
+
+            // Sort and get top 5 IPs
+            const sortedIPs = Object.entries(ipCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            topIPsList.innerHTML = sortedIPs.map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('');
+        }
+
+        document.addEventListener('click', event => {
+            if (event.target.classList.contains('view-details')) {
+                const ip = event.target.getAttribute('data-ip');
+                const detailsBox = document.getElementById(`details-${ip}`);
+                detailsBox.classList.toggle('open');
+    
+                if (detailsBox.classList.contains('open') && detailsBox.innerHTML.trim() === '') {
+                    fetch(`/get_alert_details?ip=${ip}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            const detailsHtml = `
+                                <table class="table">
+                                    <tr><th>Type</th><th>Details</th></tr>
+                                    ${data.map(detail => `<tr><td>${detail.type}</td><td>${detail.info}</td></tr>`).join('')}
+                                </table>
+                            `;
+                            detailsBox.innerHTML = detailsHtml;
+                        })
+                        .catch(() => {
+                            detailsBox.innerHTML = '<p>Error loading details.</p>';
+                        });
+                } else {
+                    detailsBox.innerHTML = ''; // Optionally empty the details box when closed
+                }
+            }
+        });
+
+        function initializeMap() {
+            map = L.map('map').setView([0, 0], 2);  // Initialize the map
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+            }).addTo(map);
+    }
+
+        function updateMap(alerts) {
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            // Add markers to the map based on alert IPs and severities
+            alerts.forEach(alert => {
+                const severity = alertSeverityMapping[alert.alert_type] || 'Low';
+                const color = getSeverityColor(severity);
+
+                const icon = L.divIcon({
+                    className: 'custom-marker',
+                    html: `<div style="background-color: ${color}; width: 20px; height: 20px; border-radius: 50%;"></div>`,
+                });
+
+                if (alert.location.latitude && alert.location.longitude) {
+                    const marker = L.marker([alert.location.latitude, alert.location.longitude], { icon: icon })
+                        .bindPopup(`<b>${alert.alert_type}</b><br>Source IP: ${alert.src_ip}<br>Country: ${alert.location.country}`)
+                        .addTo(map);
+                    markers.push(marker);
+                }
+            });
+        }
+
+        function getSeverityColor(severity) {
+            switch (severity) {
+                case 'Critical':
+                    return 'red';
+                case 'High':
+                    return 'orange';
+                case 'Medium':
+                    return 'yellow';
+                case 'Low':
+                    return 'green';
+                default:
+                    return 'blue';
+            }
+        }
+
+        function updateTopIPs(ipCounts) {
+            const topIPsList = document.getElementById('top_ips_list');
+
+            // Sort and get top 5 IPs
+            const sortedIPs = Object.entries(ipCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+            topIPsList.innerHTML = sortedIPs.map(([ip, count]) => `<li>${ip}: ${count}</li>`).join('');
+        }
+
+        function updateSeverityChart(severityData) {
+            const alertSeverityCtx = document.getElementById('alertSeverityChart').getContext('2d');
+            new Chart(alertSeverityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Low', 'Medium', 'High', 'Critical'],
+                    datasets: [{
+                        label: 'Alert Severity Levels',
+                        data: [severityData.Low, severityData.Medium, severityData.High, severityData.Critical],
+                        backgroundColor: [
+                            'rgba(75, 192, 192, 0.7)',
+                            'rgba(255, 206, 86, 0.7)',
+                            'rgba(255, 159, 64, 0.7)',
+                            'rgba(255, 99, 132, 0.7)'
+                        ],
+                        borderColor: [
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(255, 99, 132, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Severity Level'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Count'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateCharts(alertTypes) {
+            var alertTypeCtx = document.getElementById('alertTypeChart').getContext('2d');
+            var alertTypeChart = new Chart(alertTypeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(alertTypes),
+                    datasets: [{
+                        label: 'Alert Types',
+                        data: Object.values(alertTypes),
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.2)',
+                            'rgba(54, 162, 235, 0.2)',
+                            'rgba(255, 206, 86, 0.2)',
+                            'rgba(75, 192, 192, 0.2)',
+                            'rgba(153, 102, 255, 0.2)',
+                            'rgba(255, 159, 64, 0.2)'
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        }
+    </script>
+</body>
+</html>

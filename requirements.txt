@@ -1,0 +1,8 @@
+scapy
+alerter
+requests
+impacket
+numpy
+psutil
+whois
+socket
