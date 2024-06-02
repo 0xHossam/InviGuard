@@ -64,7 +64,8 @@ descriptions = {
     "Newly Registered Domain Detected": "A connection to a domain that was recently registered has been detected, which can be indicative of phishing or command-and-control (C2) domains used by attackers to evade detection.",
     "Suspicious User-Agent Detected": "A user-agent string that is uncommon or known to be associated with malicious activity has been detected in network traffic, potentially indicating the use of automated tools or malware.",
     "Suspicious Hostname Detected": "A hostname in network traffic that appears unusual or is associated with known threats has been detected, warranting further investigation for potential malicious activity.",
-    "Suspicious Geo-Location Detected": "Network traffic originating from or destined to an unusual or high-risk geographic location has been detected, suggesting potential malicious activity or policy violations."
+    "Suspicious Geo-Location Detected": "Network traffic originating from or destined to an unusual or high-risk geographic location has been detected, suggesting potential malicious activity or policy violations.",
+    "LLDP Spoofing Detected": "LLDP spoofing involves sending fake LLDP packets to mislead network devices about the network topology, potentially leading to man-in-the-middle attacks and network misconfigurations. This alert indicates detection of unexpected device information, frequent LLDP packets, or multiple MAC addresses for the same device, suggesting potential LLDP spoofing.",
 
 }
 

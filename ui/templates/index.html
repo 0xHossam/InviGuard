@@ -1,39 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>InviGuard Dashboard</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap">
-
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- jsPDF -->
-    <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>InviGuard Dashboard</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jspdf@2.4.0/dist/jspdf.umd.min.js"></script>
+        <link rel="stylesheet" href="styles.css">
 
     <style>
 
         :root {
-            --primary-color: #4CAF50;
+            --primary-color: #00FF00; /* Hacker green */
             --secondary-color: #37474F;
-            --body-bg: #F5F7FA;
-            --card-bg: #FFFFFF;
-            --text-color: #333333;
-            --border-color: #E0E0E0;
-            --accent-color: #FFC107;
-            --font-family: 'Fira Code', monospace; 
-            --shadow-color: rgba(0, 0, 0, 0.1);
+            --body-bg: #1E1E1E;
+            --card-bg: #2C2C2C;
+            --text-color: #E0E0E0;
+            --border-color: #333333;
+            --accent-color: #00FF00; /* Hacker green */
+            --font-family: 'Inter', sans-serif; 
+            --shadow-color: rgba(0, 0, 0, 0.5);
         }
-
 
         body {
             background-color: var(--body-bg);
@@ -42,8 +36,8 @@
             margin: 0;
             padding: 0;
             font-size: 1rem;
-            line-height: 1.6;
-            font-weight: 400; /* Set default body font weight */
+            line-height: 1.75;
+            font-weight: 400;
         }
 
         .dark-mode {
@@ -53,20 +47,16 @@
             --border-color: #333333;
         }
 
-        .container-fluid {
-            padding: 40px;
-        }
-
         h2, h3 {
             color: var(--primary-color);
-            font-weight: 600; /* Increased font weight for headers */
+            font-weight: 700;
         }
 
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 4px 8px var(--shadow-color);
+            border-radius: 16px;
+            box-shadow: 0 6px 12px var(--shadow-color);
             margin-bottom: 30px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             overflow: hidden;
@@ -74,25 +64,26 @@
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px var(--shadow-color);
+            box-shadow: 0 12px 24px var(--shadow-color);
         }
 
         .card-body {
-            padding: 20px;
+            padding: 24px;
         }
 
         .card-title {
-            margin-bottom: 20px;
-            font-size: 1.25rem;
-            font-weight: 500; /* Updated font weight */
+            margin-bottom: 24px;
+            font-size: 1.5rem;
+            font-weight: 600;
         }
+
         .stats-card {
             background-color: var(--card-bg);
             color: var(--text-color);
-            padding: 20px;
-            border-radius: 12px;
+            padding: 24px;
+            border-radius: 16px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 8px var(--shadow-color);
+            box-shadow: 0 6px 12px var(--shadow-color);
             display: flex;
             align-items: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -100,53 +91,28 @@
 
         .stats-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px var(--shadow-color);
+            box-shadow: 0 12px 24px var(--shadow-color);
         }
 
         .stats-icon {
-            font-size: 36px;
-            margin-right: 20px;
+            font-size: 40px;
+            margin-right: 24px;
             color: var(--accent-color);
         }
 
-        .stats-info {
-            flex-grow: 1;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .alerts-box {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            box-shadow: 0 4px 8px var(--shadow-color);
-            padding: 25px;
-            margin-bottom: 30px;
-            max-height: 700px;
-            overflow-y: auto;
-        }
-
-        .table {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-            border-collapse: collapse;
-        }
-
         .table th, .table td {
-            padding: 12px 15px;
+            padding: 16px 20px;
             border-top: none;
         }
 
         .table th {
             border-bottom: 2px solid var(--border-color);
-            font-weight: 500; /* Updated font weight */
+            font-weight: 600;
             text-align: left;
         }
 
         .table tbody tr:hover {
-            background-color: rgba(0, 0, 0, 0.05);
+            background-color: rgba(0, 0, 0, 0.1);
         }
 
         .chart-container {
@@ -154,126 +120,80 @@
             height: 400px;
             position: relative;
             margin: auto;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 24px;
+            border-radius: 16px;
+            box-shadow: 0 6px 12px var(--shadow-color);
         }
 
         .card-severity {
             background-color: var(--card-bg);
             border: none;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            box-shadow: 0 6px 12px var(--shadow-color);
             margin-bottom: 30px;
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             overflow: hidden;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 20px;
+            padding: 24px;
         }
 
         .card-severity:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 12px 24px var(--shadow-color);
         }
 
         .card-severity .card-body {
             width: 100%;
-            padding: 20px;
+            padding: 24px;
         }
 
-        .chart-container canvas {
-            border-radius: 12px;
+        .btn {
+            display: inline-block;
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 8px;
+            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
         }
 
-
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: #000;
         }
 
-        .details-box {
-            display: none;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
-            max-height: 0;
+        .btn-primary:hover {
+            background-color: #00CC00;
+            border-color: #00CC00;
         }
 
-        .details-box.open {
-            display: block;
-            max-height: 500px;
-            padding: 15px;
+        .btn-secondary {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            color: #fff;
         }
 
-        .custom-marker {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-size: contain;
-            border: 2px solid #fff;
+        .btn-secondary:hover {
+            background-color: #556270;
+            border-color: #556270;
         }
 
-        .marker-icon-red {
-            background-color: red;
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
         }
 
-        .marker-icon-orange {
-            background-color: orange;
-        }
-
-        .marker-icon-yellow {
-            background-color: yellow;
-        }
-
-        .marker-icon-green {
-            background-color: green;
-        }
-
-        .marker-icon-blue {
-            background-color: blue;
-        }
-
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        .modal-content {
-            background-color: #ffffff;
-            margin: 10% auto;
-            padding: 30px;
-            border: 1px solid #888;
-            width: 60%;
-            border-radius: 12px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s ease;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        .close:hover, .close:focus {
-            color: #333;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        #configForm {
-            margin-bottom: 20px;
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: #000;
         }
 
         #configForm label {
@@ -300,65 +220,42 @@
             outline: none;
         }
 
-        .btn {
-            display: inline-block;
-            font-weight: 500; /* Updated font weight */
-            text-align: center;
-            white-space: nowrap;
-            vertical-align: middle;
-            user-select: none;
-            padding: 10px 20px;
-            font-size: 1rem;
-            line-height: 1.5;
-            border-radius: 8px;
-            transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
         }
 
-        .btn-primary {
-            background-color: var(--primary-color);
-            border-color: var(--primary-color);
+        .modal-content {
+            background-color: #1E1E1E;
+            margin: 10% auto;
+            padding: 30px;
+            border: 1px solid #888;
+            width: 60%;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover, .close:focus {
             color: #fff;
+            text-decoration: none;
+            cursor: pointer;
         }
-
-        .btn-primary:hover {
-            background-color: #388E3C;
-            border-color: #388E3C;
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary-color);
-            border-color: var(--secondary-color);
-            color: #fff;
-        }
-
-        .btn-secondary:hover {
-            background-color: #455A64;
-            border-color: #455A64;
-        }
-
-        .btn-secondary-light {
-            background-color: #556270;
-            border-color: #556270;
-            color: #fff;
-        }
-
-        .btn-secondary-light:hover {
-            background-color: #66737F;
-            border-color: #66737F;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--primary-color);
-            color: #fff;
-        }
-
-
 
     </style>
 </head>

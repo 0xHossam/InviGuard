@@ -84,5 +84,3 @@ def update_flow(pkt):
 
         analyze_flow(key, flow_data)
 
-# Start packet sniffing
-# sniff(prn=update_flow)

@@ -116,6 +116,7 @@ Alerts: [
     - [x] IP NULL Detection Module
     - [x] RST/FIN Flooding Detection Module
     - [x] DNS Hijacking Detection Module
+    - [x] LLDP Spoofing Detection Module
 
 * #### C2 Detection
 

@@ -4,8 +4,8 @@ from detection.dns_spoofing import detect_dns_spoofing
 from detection.dhcp_spoofing import detect_dhcp_spoofing
 from detection.mitm import detect_mitm
 from detection.portscan_detect import detect_port_scan
-from detection.ports_monitor import start_port_monitoring_wrapper
-# from detection.geolocation_detector import geo_analyze_packet
+from detection.ports_monitor import start_port_monitoring
+from detection.geolocation_detector import geo_analyze_packet
 from detection.tls_c2comm_detector import detect_known_c2_tls_certificates
 from detection.gda_detector import detect_dga_domains
 from detection.flow_analyzer import update_flow
@@ -25,7 +25,7 @@ from detection.http_headers_analysis import analyze_http_headers
 from detection.new_domains import detect_newly_registered_domains
 from detection.tor_exit_nodes import detect_tor_traffic
 from detection.dns_hijacking import detect_dns_hijacking
-
+from detection.lldp_spoofing import detect_lldp_spoofing
 from alerter.alert import alert
 
 from scapy.all import IP, ICMP, TCP, UDP, ARP, DNS
@@ -46,8 +46,8 @@ dns_cache = {}
 def process_packet( pkt ):
     global malicious_ips
 
-    # Start port monitoring in a separate thread
-    # port_monitoring_thread = threading.Thread( target = start_port_monitoring_wrapper )
+    # port monitoring in a separate thread
+    # port_monitoring_thread = threading.Thread( target = start_port_monitoring )
     # port_monitoring_thread.start()
 
     def execute_detection_task( func , lock , *args ):
@@ -84,11 +84,12 @@ def process_packet( pkt ):
         ( detect_newly_registered_domains , pkt ),
         ( detect_tor_traffic , pkt ),
         ( detect_icmp_tunneling , pkt ),
-        ( detect_dns_hijacking , pkt )
+        ( detect_dns_hijacking , pkt ),
+        ( detect_lldp_spoofing , pkt )
 
     ]
 
-    num_workers = min( len ( detection_tasks ) , 120 )
+    num_workers = min( len ( detection_tasks ) , 150 )
     lock = threading.Lock()
     with ThreadPoolExecutor( max_workers = num_workers ) as executor:
         futures = [ executor.submit ( execute_detection_task, task[ 0 ], lock, *task[ 1: ] ) for task in detection_tasks ]
