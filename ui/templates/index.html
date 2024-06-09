@@ -30,10 +30,9 @@
             --text-color: #333333;
             --border-color: #E0E0E0;
             --accent-color: #FFC107;
-            --font-family: 'Fira Code', monospace; 
+            --font-family: 'Fira Code', monospace;
             --shadow-color: rgba(0, 0, 0, 0.1);
         }
-
 
         body {
             background-color: var(--body-bg);
@@ -43,7 +42,7 @@
             padding: 0;
             font-size: 1rem;
             line-height: 1.6;
-            font-weight: 400; /* Set default body font weight */
+            font-weight: 400;
         }
 
         .dark-mode {
@@ -59,7 +58,7 @@
 
         h2, h3 {
             color: var(--primary-color);
-            font-weight: 600; /* Increased font weight for headers */
+            font-weight: 600;
         }
 
         .card {
@@ -84,8 +83,9 @@
         .card-title {
             margin-bottom: 20px;
             font-size: 1.25rem;
-            font-weight: 500; /* Updated font weight */
+            font-weight: 500;
         }
+
         .stats-card {
             background-color: var(--card-bg);
             color: var(--text-color);
@@ -127,21 +127,9 @@
             overflow-y: auto;
         }
 
-        .table {
-            width: 100%;
-            margin-bottom: 1rem;
-            color: var(--text-color);
-            border-collapse: collapse;
-        }
-
-        .table th, .table td {
-            padding: 12px 15px;
-            border-top: none;
-        }
-
         .table th {
             border-bottom: 2px solid var(--border-color);
-            font-weight: 500; /* Updated font weight */
+            font-weight: 500;
             text-align: left;
         }
 
@@ -183,16 +171,6 @@
             padding: 20px;
         }
 
-        .chart-container canvas {
-            border-radius: 12px;
-        }
-
-
-        canvas {
-            width: 100% !important;
-            height: 100% !important;
-        }
-
         .details-box {
             display: none;
             overflow: hidden;
@@ -204,47 +182,6 @@
             display: block;
             max-height: 500px;
             padding: 15px;
-        }
-
-        .custom-marker {
-            width: 25px;
-            height: 25px;
-            border-radius: 50%;
-            background-size: contain;
-            border: 2px solid #fff;
-        }
-
-        .marker-icon-red {
-            background-color: red;
-        }
-
-        .marker-icon-orange {
-            background-color: orange;
-        }
-
-        .marker-icon-yellow {
-            background-color: yellow;
-        }
-
-        .marker-icon-green {
-            background-color: green;
-        }
-
-        .marker-icon-blue {
-            background-color: blue;
-        }
-
-
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7);
         }
 
         .modal-content {
@@ -272,17 +209,6 @@
             cursor: pointer;
         }
 
-        #configForm {
-            margin-bottom: 20px;
-        }
-
-        #configForm label {
-            font-weight: bold;
-            color: var(--text-color);
-            display: block;
-            margin-bottom: 10px;
-        }
-
         #configForm input[type="text"] {
             width: 100%;
             padding: 12px;
@@ -302,7 +228,7 @@
 
         .btn {
             display: inline-block;
-            font-weight: 500; /* Updated font weight */
+            font-weight: 500;
             text-align: center;
             white-space: nowrap;
             vertical-align: middle;
@@ -357,7 +283,6 @@
             background-color: var(--primary-color);
             color: #fff;
         }
-
 
 
     </style>
@@ -913,7 +838,7 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 maxZoom: 18,
             }).addTo(map);
-    }
+        }
 
         function updateMap(alerts) {
             // Clear existing markers
