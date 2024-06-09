@@ -1,31 +1,22 @@
 from scapy.all import sniff
 from packet_processing import process_packet
 from IPs_IOCs_Harvester.ip_siphon import update_ip_file
-from utils.config import load_config
-import argparse, yaml, threading, time
+import argparse, threading, time
 import psutil
 import socket
 from colorama import init, Fore, Style
+from utils.banner import banner, under_banner
 
-banner = r"""
-(_____)          (_)/ _____)                    | |
-   _   ____ _   _ _| /  ___ _   _  ____  ____ _ | |
-  | | |  _ \ | | | | | (___) | | |/ _  |/ ___) || |
- _| |_| | | \ V /| | \____/| |_| ( ( | | |  ( (_| |
-(_____)_| |_|\_/ |_|\_____/ \____|\_||_|_|   \____|
-"""
-
-under_banner = """    
-    Title  : InviGuard - Network Sentinel - Monitor & Secure!
-    Author : Hossam Ehab | @0xHossam
-"""
 init( autoreset = True )
+
 def list_interfaces():
+    
     interfaces = psutil.net_if_addrs()
     interface_list = [ iface for iface in interfaces.keys() ]
     return interface_list
 
 def get_interface_name():
+
     interfaces = list_interfaces()
     if not interfaces:
         print(f"{ Fore.RED }No network interfaces found.")
@@ -46,6 +37,7 @@ def get_interface_name():
             print(f"{Fore.RED}Invalid input. Please enter a number.")
 
 def sniff_packets( filter ):
+
     selected_iface = get_interface_name()
     if selected_iface is None:
         print(f"{ Fore.RED }No suitable network interface selected.")
@@ -55,6 +47,7 @@ def sniff_packets( filter ):
     sniff( filter=filter, prn=process_packet, store=0, iface=selected_iface )
 
 def periodically_update_ips():
+
     while True:
         print(f"{ Fore.BLUE }[*] Updating IP addresses list ...")
         update_ip_file("../data/ip.txt")

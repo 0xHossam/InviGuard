@@ -60,7 +60,7 @@ def get_ips():
     all_ips = set().union( ips_otx, ips_urlhaus, ips_abuseipdb, ips_tweetfeed, ips_threatfox )
     return all_ips
 
-def update_ip_file( ip_filename = "data/ip.txt" ):
+def update_ip_file( ip_filename = "..\\data\\ip.txt" ):
 
     existing_ips = set()
     

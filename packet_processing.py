@@ -5,7 +5,7 @@ from detection.dhcp_spoofing import detect_dhcp_spoofing
 from detection.mitm import detect_mitm
 from detection.portscan_detect import detect_port_scan
 from detection.ports_monitor import start_port_monitoring
-from detection.geolocation_detector import geo_analyze_packet
+# from detection.geolocation_detector import geo_analyze_packet
 from detection.tls_c2comm_detector import detect_known_c2_tls_certificates
 from detection.gda_detector import detect_dga_domains
 from detection.flow_analyzer import update_flow
