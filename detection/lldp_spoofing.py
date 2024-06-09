@@ -1,5 +1,5 @@
 import datetime
-from scapy.all import Ether, LLDPDU, sniff
+from dpkt.ethernet import Ethernet
 from collections import defaultdict
 from alerter.alert import alert
 
@@ -30,12 +30,34 @@ lldp_history = defaultdict( lambda: {
     "timestamps": []
 })
 
-def detect_lldp_spoofing( pkt ):
+class LLDPDU:
+    def __init__(self, data):
+        self.tlvlist = self.parse_tlv(data)
+
+    def parse_tlv(self, data):
+        tlvs = []
+        while data:
+            tlv_type_length = int.from_bytes(data[:2], byteorder='big')
+            tlv_type = (tlv_type_length >> 9) & 0x7F
+            tlv_length = tlv_type_length & 0x01FF
+            tlv_value = data[2:2+tlv_length]
+            tlvs.append(TLV(tlv_type, tlv_value))
+            data = data[2+tlv_length:]
+        return tlvs
+
+class TLV:
+    def __init__(self, tlv_type, value):
+        self.tlv_type = tlv_type
+        self.value = value
+
+def detect_lldp_spoofing( pkt_data ):
+    pkt = Ethernet( pkt_data )
     
-    if pkt.haslayer( LLDPDU ):
-        src_mac = pkt[ Ether ].src
-        device_name = pkt[ LLDPDU ].tlvlist[ 0 ].value  # assuming the first tlv is the device name
-        port_id = pkt[ LLDPDU ].tlvlist[ 1 ].value      # assuming the second tlv is the port id
+    if isinstance( pkt.data, LLDPDU ):
+        src_mac = pkt.src
+        lldp_data = LLDPDU(pkt.data)
+        device_name = lldp_data.tlvlist[ 0 ].value  # assuming the first tlv is the device name
+        port_id = lldp_data.tlvlist[ 1 ].value      # assuming the second tlv is the port id
         lldp_entry = lldp_history[ src_mac ]
         current_time = datetime.datetime.now()
 

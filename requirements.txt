@@ -6,3 +6,4 @@ numpy
 psutil
 whois
 socket
+dpkt
