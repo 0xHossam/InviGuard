@@ -26,6 +26,9 @@ from detection.new_domains import detect_newly_registered_domains
 from detection.tor_exit_nodes import detect_tor_traffic
 from detection.dns_hijacking import detect_dns_hijacking
 from detection.lldp_spoofing import detect_lldp_spoofing
+from detection.smtp_relay import detect_smtp_relay
+from detection.http_post_exf import detect_http_post_exfiltration
+from detection.tcp_connection_hijacking import detect_tcp_hijacking
 from alerter.alert import alert
 
 from scapy.all import IP, ICMP, TCP, UDP, ARP, DNS
@@ -85,7 +88,10 @@ def process_packet( pkt ):
         ( detect_tor_traffic , pkt ),
         ( detect_icmp_tunneling , pkt ),
         ( detect_dns_hijacking , pkt ),
-        ( detect_lldp_spoofing , pkt )
+        ( detect_lldp_spoofing , pkt ),
+        ( detect_smtp_relay , pkt ),
+        ( detect_http_post_exfiltration , pkt ),
+        ( detect_tcp_hijacking , pkt )
 
     ]
 

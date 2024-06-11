@@ -10,47 +10,51 @@ thresholds:
   ddos_threshold: 10000
   dos_threshold: 5000
   max_threshold: 1000
-
-  high_traffic_threshold: 100000  # bytes, new threshold for high traffic detection
-  high_packet_count_threshold: 200  # count, new threshold for high packet count detection
-  short_duration_threshold: 10  # seconds, new threshold for detecting high traffic in a short duration
+  high_traffic_threshold: 100000      # bytes, new threshold for high traffic detection
+  high_packet_count_threshold: 200    # count, new threshold for high packet count detection
+  short_duration_threshold: 10        # seconds, new threshold for detecting high traffic in a short duration
+  smtp_threshold: 100                 # threshold for the number of SMTP connections to detect relaying
+  post_exfil_threshold: 50            # threshold for the number of POST requests to detect exfiltration
+  post_data_threshold: 1000000        # threshold for the total data size (in bytes) to detect exfiltration
+  post_time_window: 3600              # time window in seconds for POST request detection
 
 suspicious_activity:
 
-  max_domain_length: 70          # threshold for unusually long domain names
-  min_query_interval: 10         # minimum time interval (in seconds) between queries to consider it suspicious
-  max_queries_short_timeframe: 5 # maximum allowed queries in a short timeframe
+  max_domain_length: 70               # threshold for unusually long domain names
+  min_query_interval: 10              # minimum time interval (in seconds) between queries to consider it suspicious
+  max_queries_short_timeframe: 5      # maximum allowed queries in a short timeframe
 
-dga_detection:                    
+dga_detection:
 
-  min_entropy: 3.5               # minimum entropy threshold for domain names to be considered as potentially DGA-generated
-  max_subdomain_length: 20       # maximum length of subdomain parts to consider before additional analysis
+  min_entropy: 3.5                    # minimum entropy threshold for domain names to be considered as potentially DGA-generated
+  max_subdomain_length: 20            # maximum length of subdomain parts to consider before additional analysis
 
 network_detection:
 
-  trusted_network_prefixes: ["192.168.", "10.0.", "172.16."]  # trusted network prefixes
-  suspicious_threshold: 10                                    # for the number of suspicious packets from a single IP
-  time_window: 60                                             # time window in seconds for detecting suspicious activity
-  ttl_threshold: 5                                            # TTL difference threshold for detecting IP spoofing
+  trusted_network_prefixes: ["192.168.", "10.0."]  # trusted network prefixes
+  suspicious_threshold: 10                         # for the number of suspicious packets from a single IP
+  time_window: 60                                  # time window in seconds for detecting suspicious activity
+  ttl_threshold: 5                                 # TTL difference threshold for detecting IP spoofing
+  hijack_rst_threshold: 10                         # threshold for the number of RST packets to detect TCP hijacking
+  hijack_time_window: 60                           # time window in seconds for detecting TCP hijacking
 
 mac_flooding:
 
-  alert_threshold: 1.5       # Multiplier for the average MAC count to trigger an alert
-  history_maxlen: 1000       # Maximum length of history to keep track of MAC addresses
-  count_maxlen: 100          # Maximum length of the deque that stores unique MAC counts
+  alert_threshold: 1.5                # multiplier for the average MAC count to trigger an alert
+  history_maxlen: 1000                # maximum length of history to keep track of MAC addresses
+  count_maxlen: 100                   # maximum length of the deque that stores unique MAC counts
 
 mac_spoofing:
 
-  change_threshold: 5        # Threshold for the number of MAC changes to trigger an alert
-  history_maxlen: 100        # Maximum length of history to keep track of MAC-IP associations
+  change_threshold: 5                 # threshold for the number of MAC changes to trigger an alert
+  history_maxlen: 100                 # maximum length of history to keep track of MAC-IP associations
 
 ip_null_scan:
 
-  alert_threshold: 2         # Multiplier for the average scan interval to trigger an alert
-  count_maxlen: 100          # Maximum length of the deque that stores null scan counts
+  alert_threshold: 2                  # multiplier for the average scan interval to trigger an alert
+  count_maxlen: 100                   # maximum length of the deque that stores null scan counts
 
 rst_fin_flood:
 
-  alert_multiplier: 3        # Multiplier for the standard deviation-based threshold to trigger an alert
-  rate_maxlen: 100           # Maximum length of history to keep track of RST/FIN packet rates
-
+  alert_multiplier: 3                 # multiplier for the standard deviation-based threshold to trigger an alert
+  rate_maxlen: 100                    # maximum length of history to keep track of RST/FIN packet rates

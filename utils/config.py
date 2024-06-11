@@ -13,7 +13,8 @@ arp_history = defaultdict (
     }
     
 )
-logging.basicConfig(filename='warning.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+
+# logging.basicConfig(filename='warning.log', level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 local_ip = socket.gethostbyname(socket.gethostname())
 arp_table = collections.defaultdict(set)
@@ -28,11 +29,20 @@ mac_flood_threshold = thresholds["mac_flood_threshold"]
 ddos_threshold = thresholds['ddos_threshold']  
 dos_threshold = thresholds['dos_threshold']    
 max_threshold = thresholds['max_threshold']  
+post_exfil_threshold = thresholds['post_exfil_threshold']
+post_data_threshold = thresholds['post_data_threshold']
+post_time_window = thresholds['post_time_window']
+smtp_threshold = thresholds['smtp_threshold']
+# time_window = thresholds['time_window']
 
 trusted_network_prefixes = network_detection['trusted_network_prefixes']
 suspicious_threshold = network_detection['suspicious_threshold']
 time_window = network_detection['time_window']
 ttl_threshold = network_detection['ttl_threshold']
+hijack_rst_threshold = network_detection['hijack_rst_threshold']
+hijack_time_window = network_detection['hijack_time_window']
+
+
 
 traffic_rate = {}
 dns_cache = {}

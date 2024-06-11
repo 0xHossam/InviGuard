@@ -117,6 +117,8 @@ Alerts: [
     - [x] RST/FIN Flooding Detection Module
     - [x] DNS Hijacking Detection Module
     - [x] LLDP Spoofing Detection Module
+    - [x] TCP Connection Hijacking Detection Module
+    - [x] SMTP Relay Detection Module
 
 * #### C2 Detection
 
@@ -132,6 +134,7 @@ Alerts: [
     - [x] HTTP Headers Analysis Module 
     - [x] Dns-Over-HTTP ( DoH ) Detection Module
     - [x] Detecting TOR Exit Nodes & It's Traffic
+    - [x] HTTP POST Exfiltration Detection Module
 
 * #### IOC (Indicators of Compromise) Harvester
 
